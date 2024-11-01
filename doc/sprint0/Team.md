@@ -6,4 +6,4 @@
 | Mher Eric Gyulumyan | E       | 217990540  | mericg@my.yorku.ca   | Discord             | BigTimeRushFan88 |
 | Jason Mbaki         | E       | 218125831  | jm792429@my.yorku.ca | Discord             | mbaki_35         |
 
-Discord link: https://discord.gg/czcFe5rrrX
+Discord link: https://discord.gg/JaPQTzfn
