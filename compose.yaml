@@ -1,0 +1,38 @@
+name: film-owl
+
+services:
+    service1:
+        build: ./film-owl-backend/service1
+        ports:
+            - "5000:5000"
+        volumes:
+            - ./film-owl-backend/service1:/app
+        environment:
+            - FLASK_ENV=development
+
+    service2:
+        build: ./film-owl-backend/service2
+        ports:
+            - "5001:5000"
+        volumes:
+            - ./film-owl-backend/service2:/app
+        environment:
+            - FLASK_ENV=development
+
+    ui:
+        build: ./film-owl-ui
+        ports:
+            - "3000:3000"
+        volumes:
+            - ./film-owl-ui:/app
+        environment:
+            - NODE_ENV=development
+
+    db:
+        image: postgres:13
+        ports:
+            - "5432:5432"
+        environment:
+            POSTGRES_USER: postgres
+            POSTGRES_PASSWORD: postgres
+            POSTGRES_DB: film-owl
