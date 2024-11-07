@@ -9,6 +9,11 @@ services:
             - ./film-owl-backend/service1:/app
         environment:
             - FLASK_ENV=development
+        # based off of https://docs.docker.com/reference/compose-file/develop/
+        develop:
+            watch:
+                - path: ./film-owl-backend/service1
+                  action: rebuild
 
     service2:
         build: ./film-owl-backend/service2
@@ -18,15 +23,20 @@ services:
             - ./film-owl-backend/service2:/app
         environment:
             - FLASK_ENV=development
+        develop:
+            watch:
+                - path: ./film-owl-backend/service2
+                  action: rebuild
 
     ui:
         build: ./film-owl-ui
         ports:
             - "3000:3000"
-        volumes:
-            - ./film-owl-ui:/app
-        environment:
-            - NODE_ENV=development
+        develop:
+            watch:
+                - path: ./film-owl-ui
+                  action: sync
+                  target: /app
 
     db:
         image: postgres:13

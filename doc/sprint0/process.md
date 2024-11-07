@@ -30,3 +30,4 @@ on Wednesdays will be effective. being used. We plan to continue effectively com
 ## Next Phase:
 
 For the next phase, we will break down the tasks to get more familiar with the project. We aim to develop functional prototypes to ensure our project progresses in the right direction and to identify areas for improvement early on. We also plan to increase meeting frequency to maintain alignment, ensuring all team members are up to date during the development process.
+
