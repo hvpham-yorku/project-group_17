@@ -1,41 +1,32 @@
-Team Organization:
+# Process Documentation
 
-We organized the teams tasks based upon the priority of the task, in order to deliver the 
-most critical functionality first, and upon each team members strengths from past projects
-and experiences.
+## Team Organization:
 
-Feloubatir: Search Features
-Maryan: Movie Page Features
-Ahmed: Movie Page Features
-Eric: Search Features
-Jason: Movie Page Features
+We organized tasks based on priority to deliver the most critical functionality first, assigning each task according to team members' strengths and past experiences. Through open discussions, we each expressed where we believed we could contribute most effectively, ensuring that tasks were assigned to match individual expertise. Additionally, we designated responsible team members to oversee key areas—front-end, back-end, and database—allowing for smoother coordination during implementation. These “lead” roles enabled certain members to act as points of contact, similar to senior members or product owners, ensuring each component was managed efficiently and aligned with the project goals.
 
-Decision Making:
+Roles were divided as follows:
 
-Decisions were decided after considering every group members opinion in order to clear and 
-confusion or concerns that may have arrisen. We also took into consideration the strengths 
-of each group member to determine where they can best perform in, while also observing other 
-members to learn more about aspects of project development certain other members may not be 
-familiar in.
+- Feloubatir: Search Features _(Back End Lead)_
+- Maryan: Movie Page Features _(Front End Lead)_
+- Ahmed: Movie Page Features
+- Eric: Search Features _(Database Lead)_
+- Jason: Movie Page Features
 
-Prioritizing User Stories:
+## Decision Making:
 
-User stories were prioritized based on their priorities in order to deliver the most critical  
-functionality to the project first. We determined that the ability to search for films based 
-their various aspects and the ability to create an account were core features that guaranteed  
-our projects most basic functional properties.
+Decision-making was a collaborative process where we considered each team member’s input, allowing us to clarify any confusion or address concerns early on. We also took into consideration the strengths of each group member's skills to determine where they could best perform. Additionally, this approach provided opportunities for team members to observe and learn from each other, gaining exposure to different aspects of project development
 
-Meetings: 
+## Prioritizing User Stories:
 
-Meetings were organized based upon the availability of each group member to maximize the amount 
+User stories were first prioritized based on their relevance to the core functionality of the project. We determined we are focusing on delivering key features. This includes the ability to search for films based on various characteristics and the ability to create an account are core features that will guarantee FilmOwl's most basic functional properties. We plan that our prioritization will ensure that essential features supporting the project’s main purpose are developed early, providing a strong foundation for additional functionality like reviews, and profile personalization.
+
+## Meetings: 
+
+Meetings were scheduled based on the availability of each group member to maximize the amount 
 of participants in meetings. In general, meetings were held on Discord at least twice a week, 
-typically around 8pm as this was a time most comfortable with everyone. Additionally, the lab 
-periods will also be used for in-person meetings, with either the first of second lab session 
-on Wednesday being used.
+typically around 8pm as this was a time most comfortable with everyone. Additionally, we agreed that in-person meetings during the lab periods, alternating between the first or second lab session 
+on Wednesdays will be effective. being used. We plan to continue effectively communicating on Discord to keep consistent with our meeting plan. Furthermore, in the case a member cannot make it or reschedule the rest of the members still meet and make use of meeting minutes. We use meeting minutes to keep all members on track, summarize discussed items, state future meeting times, and next meeting actions or goals.
 
-Next Phase:
+## Next Phase:
 
-For the next phase, we will break down the tasks to get more familiar with the project, work 
-towards creating functional prototypes to determine when our project is going in the right 
-direction, and more frequent meetings so every member can be on the same page during the 
-development process.
+For the next phase, we will break down the tasks to get more familiar with the project. We aim to develop functional prototypes to ensure our project progresses in the right direction and to identify areas for improvement early on. We also plan to increase meeting frequency to maintain alignment, ensuring all team members are up to date during the development process.
