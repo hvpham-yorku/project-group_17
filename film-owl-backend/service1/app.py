@@ -1,12 +1,11 @@
-from flask import Flask
+from fastapi import FastAPI
 
-app = Flask(__name__)
+app = FastAPI()
 
-
-@app.route("/")
-def home():
-    return "Welcome to Film Owl service1"
-
+@app.get("/")
+def read_root():
+    return {"message": "Welcome to Film Owl service1"}
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    import uvicorn
+    uvicorn.run(app, host="0.0.0.0", port=8000, log_level="info")

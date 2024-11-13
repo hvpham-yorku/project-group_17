@@ -4,7 +4,7 @@ services:
     service1:
         build: ./film-owl-backend/service1
         ports:
-            - "5000:5000"
+            - "5000:8000"
         volumes:
             - ./film-owl-backend/service1:/app
         environment:
@@ -18,7 +18,7 @@ services:
     service2:
         build: ./film-owl-backend/service2
         ports:
-            - "5001:5000"
+            - "5001:8000"
         volumes:
             - ./film-owl-backend/service2:/app
         environment:
