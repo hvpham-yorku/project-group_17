@@ -46,3 +46,10 @@ services:
             POSTGRES_USER: postgres
             POSTGRES_PASSWORD: postgres
             POSTGRES_DB: film-owl
+        volumes:
+            - ./db:/docker-entrypoint-initdb.d/
+
+    adminer:
+        image: adminer
+        ports:
+            - "8080:8080"
