@@ -5,15 +5,16 @@ services:
         build: ./film-owl-backend/service1
         ports:
             - "5000:8000"
-        volumes:
-            - ./film-owl-backend/service1:/app
+        # volumes:
+        #     - ./film-owl-backend/service1:/app
         environment:
             - FLASK_ENV=development
         # based off of https://docs.docker.com/reference/compose-file/develop/
         develop:
             watch:
                 - path: ./film-owl-backend/service1
-                  action: rebuild
+                  action: sync+restart
+                  target: /app
 
     service2:
         build: ./film-owl-backend/service2
@@ -26,7 +27,8 @@ services:
         develop:
             watch:
                 - path: ./film-owl-backend/service2
-                  action: rebuild
+                  action: sync+restart
+                  target: /app
 
     ui:
         build: ./film-owl-ui
