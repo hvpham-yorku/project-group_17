@@ -6,3 +6,15 @@ CREATE TABLE users (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+CREATE TABLE movies (
+    id SERIAL PRIMARY KEY,
+    title VARCHAR(255) NOT NULL,
+    genre VARCHAR(100),
+    release_date DATE,
+    duration_minutes INT,
+    image_url VARCHAR(255),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+INSERT INTO movies (title, genre, release_date, duration_minutes, image_url)
+VALUES ('Inception', 'Sci-Fi', '2010-07-16', 148, 'https://example.com/inception.jpg');
