@@ -18,7 +18,9 @@ class Movie(SQLModel, table=True):
     __tablename__ = "movies"
     id: Optional[int] = Field(default=None, primary_key=True)
     title: str
-    release_date: str
+    release_date: datetime
+    plot: str
+    genre: str
     duration_minutes: Optional[int] = None
     image_url: Optional[str] = None
     created_at: Optional[str] = None
@@ -27,22 +29,26 @@ class Movie(SQLModel, table=True):
 @app.get("/search/{movie_title}")
 def get_search_results(movie_title: str):
 
-    url = f"http://www.omdbapi.com/?i=tt3896198&apikey={apiKey}&s={movie_title}"
+    search_url = f"http://www.omdbapi.com/?&apikey={apiKey}&s={movie_title}"
 
-    response = requests.get(url)
+    response = requests.get(search_url)
     search_data = response.json()
 
     if search_data.get("Response") == "True":
-
+        movies = []
         for m in search_data["Search"]:
-
-            print(m)
-
-            date_obj = datetime.strptime(m["Year"][0:4], "%Y")
-
+            movie_data = get_movie_details_by_title(m["Title"])
             movie = Movie(
-                title=m["Title"], release_date=date_obj, image_url=m["Poster"]
+                title=movie_data["Title"],
+                release_date=movie_data["Released"],
+                image_url=movie_data["Poster"],
+                plot=movie_data["Plot"],
+                genre=movie_data["Genre"].split(", ")[0],
+                created_at=datetime.now(),
+                duration_minutes=int(movie_data["Runtime"].split(" ")[0]),
             )
+
+            movies.append(movie)
 
             engine = create_engine("postgresql://postgres:postgres@db/film-owl")
 
@@ -51,9 +57,17 @@ def get_search_results(movie_title: str):
                 session.commit()
                 session.refresh(movie)
 
-        return search_data["Search"]
+        return movies
     else:
         return {"Error": "Movie(s) Not Found!"}
+
+
+def get_movie_details_by_title(movie_title: str):
+    url = f"http://www.omdbapi.com/?t={movie_title}&plot=full&apikey={apiKey}"
+    response = requests.request("GET", url)
+    movie_data = response.json()
+
+    return movie_data
 
 
 @app.get("/")
