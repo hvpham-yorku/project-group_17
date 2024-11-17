@@ -1,6 +1,15 @@
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 from typing import Optional
 
@@ -21,7 +30,8 @@ class Movie(SQLModel, table=True):
     release_date: datetime
     plot: str
     genre: str
-    duration_minutes: Optional[int] = None
+    imdb_id: str
+    duration_minutes: Optional[str] = None
     image_url: Optional[str] = None
     created_at: Optional[str] = None
 
@@ -36,26 +46,37 @@ def get_search_results(movie_title: str):
 
     if search_data.get("Response") == "True":
         movies = []
+        engine = create_engine("postgresql://postgres:postgres@db/film-owl")
+
         for m in search_data["Search"]:
             movie_data = get_movie_details_by_title(m["Title"])
-            movie = Movie(
-                title=movie_data["Title"],
-                release_date=movie_data["Released"],
-                image_url=movie_data["Poster"],
-                plot=movie_data["Plot"],
-                genre=movie_data["Genre"].split(", ")[0],
-                created_at=datetime.now(),
-                duration_minutes=int(movie_data["Runtime"].split(" ")[0]),
-            )
-
-            movies.append(movie)
-
-            engine = create_engine("postgresql://postgres:postgres@db/film-owl")
+            imdb_id = movie_data["imdbID"]
 
             with Session(engine) as session:
-                session.add(movie)
-                session.commit()
-                session.refresh(movie)
+                existing_movie = session.exec(
+                    select(Movie).where(Movie.imdb_id == imdb_id)
+                ).first()
+
+                if existing_movie:
+                    movies.append(existing_movie)
+                else:
+                    movie = Movie(
+                        title=movie_data["Title"],
+                        release_date=datetime.strptime(
+                            movie_data["Released"], "%d %b %Y"
+                        ),
+                        image_url=movie_data["Poster"],
+                        plot=movie_data["Plot"],
+                        genre=movie_data["Genre"].split(", ")[0],
+                        created_at=datetime.now(),
+                        duration_minutes=movie_data["Runtime"],
+                        imdb_id=imdb_id,
+                    )
+
+                    session.add(movie)
+                    session.commit()
+                    session.refresh(movie)
+                    movies.append(movie)
 
         return movies
     else:

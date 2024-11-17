@@ -12,7 +12,8 @@ CREATE TABLE movies (
     plot TEXT,
     genre VARCHAR(50),
     release_date DATE,
-    duration_minutes INT,
+    duration_minutes TEXT,
     image_url VARCHAR(255),
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    imdb_id VARCHAR(50) NOT NULL UNIQUE
 );
