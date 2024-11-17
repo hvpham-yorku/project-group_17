@@ -40,7 +40,9 @@ class Movie(SQLModel, table=True):
 def get_search_results(movie_title: str):
 
     search_url = f"http://www.omdbapi.com/?&apikey={apiKey}&s={movie_title}"
+    search_url = f"http://www.omdbapi.com/?&apikey={apiKey}&s={movie_title}"
 
+    response = requests.get(search_url)
     response = requests.get(search_url)
     search_data = response.json()
 
@@ -79,8 +81,17 @@ def get_search_results(movie_title: str):
                     movies.append(movie)
 
         return movies
+        return movies
     else:
         return {"Error": "Movie(s) Not Found!"}
+
+
+def get_movie_details_by_title(movie_title: str):
+    url = f"http://www.omdbapi.com/?t={movie_title}&plot=full&apikey={apiKey}"
+    response = requests.request("GET", url)
+    movie_data = response.json()
+
+    return movie_data
 
 
 def get_movie_details_by_title(movie_title: str):
