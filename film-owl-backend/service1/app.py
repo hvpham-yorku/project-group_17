@@ -40,9 +40,7 @@ class Movie(SQLModel, table=True):
 def get_search_results(movie_title: str):
 
     search_url = f"http://www.omdbapi.com/?&apikey={apiKey}&s={movie_title}"
-    search_url = f"http://www.omdbapi.com/?&apikey={apiKey}&s={movie_title}"
 
-    response = requests.get(search_url)
     response = requests.get(search_url)
     search_data = response.json()
 
@@ -80,7 +78,6 @@ def get_search_results(movie_title: str):
                     session.refresh(movie)
                     movies.append(movie)
 
-        return movies
         return movies
     else:
         return {"Error": "Movie(s) Not Found!"}
