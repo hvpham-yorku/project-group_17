@@ -62,13 +62,13 @@ function NavBar() {
           } lg:flex lg:items-center lg:justify-between w-full lg:w-auto mt-4 lg:mt-0`}
         >
           <div className="text-2xl lg:flex-grow">
-          <Link href="/" className="block lg:inline-block text-teal-800 dark:text-teal-300 hover:text-teal-600 dark:hover:text-teal-400 mx-4">
-              Home
-            </Link>
-            <Link href="/favourites" className="block lg:inline-block text-teal-800 dark:text-teal-300 hover:text-teal-600 dark:hover:text-teal-400 mx-4">
+          <Link href="/" className="block lg:inline-block text-teal-800 dark:text-teal-300 hover:text-teal-600 dark:hover:text-teal-400 hover:underline dark:hover:underline mx-4">
+            Home
+          </Link>
+            <Link href="/favourites" className="block lg:inline-block text-teal-800 dark:text-teal-300 hover:text-teal-600 dark:hover:text-teal-400 hover:underline dark:hover:underlinemx-4">
               Favourites
             </Link>
-            <Link href="/ratings" className="block lg:inline-block text-teal-800 dark:text-teal-300 hover:text-teal-600 dark:hover:text-teal-400 mx-4">
+            <Link href="/ratings" className="block lg:inline-block text-teal-800 dark:text-teal-300 hover:text-teal-600 dark:hover:text-teal-400 hover:underline dark:hover:underline mx-4">
               Ratings
             </Link>
           </div>
