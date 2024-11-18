@@ -15,21 +15,22 @@ function NavBar() {
   return (
     <nav className="fixed top-0 left-0 w-full z-50 bg-white dark:bg-gray-900 shadow-md">
       <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-        {/* Logo */}
-        <div className="flex items-center">
-          <Image
-            src="/logo-dark.png" 
-            alt="FilmOwl Logo"
-            width={0}
-            height={0}
-            className="mr-3 w-8 sm:w-12 md:w-16 lg:w-20" 
-            style={{ height: 'auto' }}
-          />
-        </div>
 
         {/* Title */}
         <div className="hidden lg:block text-center text-teal-800 dark:text-teal-300 font-bold text-5xl">
           Film Owl
+        </div>
+
+        {/* Logo */}
+        <div className="flex items-center">
+          <Image
+            src="/logo-dark.png"
+            alt="FilmOwl Logo"
+            width={0}
+            height={0}
+            className="mr-3 w-8 sm:w-12 md:w-16 lg:w-20"
+            style={{ height: 'auto' }}
+          />
         </div>
 
         {/* Hamburger Icon */}
@@ -57,14 +58,13 @@ function NavBar() {
 
         {/* Nav Links */}
         <div
-          className={`${
-            isOpen ? 'block' : 'hidden'
-          } lg:flex lg:items-center lg:justify-between w-full lg:w-auto mt-4 lg:mt-0`}
+          className={`${isOpen ? 'block' : 'hidden'
+            } lg:flex lg:items-center lg:justify-between w-full lg:w-auto mt-4 lg:mt-0`}
         >
-          <div className="text-2xl lg:flex-grow">
-          <Link href="/" className="block lg:inline-block text-teal-800 dark:text-teal-300 hover:text-teal-600 dark:hover:text-teal-400 hover:underline dark:hover:underline mx-4">
-            Home
-          </Link>
+          <div className="text-xl lg:flex-grow">
+            <Link href="/" className="block lg:inline-block text-teal-800 dark:text-teal-300 hover:text-teal-600 dark:hover:text-teal-400 hover:underline dark:hover:underline mx-4">
+              Home
+            </Link>
             <Link href="/favourites" className="block lg:inline-block text-teal-800 dark:text-teal-300 hover:text-teal-600 dark:hover:text-teal-400 hover:underline dark:hover:underlinemx-4">
               Favourites
             </Link>
