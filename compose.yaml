@@ -37,8 +37,8 @@ services:
         develop:
             watch:
                 - path: ./film-owl-ui
-                  action: sync
-                  target: /app
+                  action: sync+restart
+                  target: /app/src
 
     db:
         image: postgres:13
