@@ -2,71 +2,51 @@
 
 import React, { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
-import { fetchMovies, Movie } from "@/lib/api";
+import { fetchMovies } from "@/lib/api";
+import SearchInput from "./components/search-input";
+// import { Movie } from "@/lib/api";
+interface Movie {
+  image_url: string;
+  genre: string;
+  id: string;
+  release_date: string;
+  title: string;
+}
 
 const SearchPage: React.FC = () => {
+
   const searchParams = useSearchParams();
-  const query = searchParams.get("query") || ""; // Retrieve query from URL
-  const [movies, setMovies] = useState<Movie[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
+  const query = searchParams.get("query") || ""; // Get the query parameter from the URL
+  const [results, setResults] = useState([]);
 
   useEffect(() => {
     if (!query) return;
 
-    const getMovies = async () => {
-      setLoading(true);
-      setError("");
-
-      try {
-        const results = await fetchMovies(query); // Use reusable API function
-        setMovies(results);
-      } catch (err) {
-        setError(err.message || "An error occurred while fetching movies.");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    getMovies();
+    // Fetch data from the backend
+    fetch(`http://localhost:5002/search/${encodeURIComponent(query)}`)
+      .then((response) => {
+        if (!response.ok) throw new Error("Failed to fetch movies");
+        return response.json();
+      })
+      .then((data) => setResults(data))
+      .catch((error) => console.error("Error fetching movies:", error));
   }, [query]);
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold text-teal-700 dark:text-teal-300 mb-8">
-        Results for "{query}"
-      </h1>
-      {loading && (
-        <p className="text-center text-gray-500 dark:text-gray-400">Loading...</p>
-      )}
-      {error && (
-        <p className="text-center text-red-500">Error: {error}</p>
-      )}
-      {!loading && !error && movies.length === 0 && (
-        <p className="text-center text-gray-500 dark:text-gray-400">
-          No results found for "{query}".
-        </p>
-      )}
-      {!loading && !error && movies.length > 0 && (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-          {movies.map((movie) => (
-            <div
-              key={movie.imdbID}
-              className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-4 flex flex-col items-center"
-            >
-              <img
-                src={movie.Poster !== "N/A" ? movie.Poster : "/placeholder.png"}
-                alt={movie.Title}
-                className="rounded-md w-full h-64 object-cover mb-4"
-              />
-              <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-200 text-center">
-                {movie.Title}
-              </h2>
-              <p className="text-sm text-gray-500 dark:text-gray-400">{movie.Year}</p>
-            </div>
-          ))}
-        </div>
-      )}
+      <h1 className="text-4xl font-bold mb-8">Results for "{query}"</h1>
+      {results.map((movie) => (
+          <li key={movie.imdbID} className="mb-4">
+            <img
+              src={movie.image_url !== "N/A" ? movie.image_url : "/placeholder.png"}
+              alt={movie.title}
+              className="w-full h-64 object-cover mb-2 rounded"
+            />
+            <h2 className="text-lg font-bold">{movie.title}</h2>
+            <p>{movie.created_at}</p>
+          </li>
+        ))}
+     
     </div>
   );
 };

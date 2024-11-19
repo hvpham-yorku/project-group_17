@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Query
 
 app = FastAPI()
 
@@ -47,6 +47,14 @@ def get_movie_by_id(movie_id: int):
         statement = select(Movie).where(Movie.id == movie_id)
         movie = session.exec(statement).first()
         return movie
+
+@app.get("/search{query}")
+def search_movies(query: str):
+   engine = create_engine("postgresql://postgres:postgres@db/film-owl")
+   with Session(engine) as session:
+        statement = select(Movie).where(Movie.title.ilike(f"%{query}%"))
+        results = session.exec(statement).all()
+        return results
 
 if __name__ == "__main__":
     import uvicorn
