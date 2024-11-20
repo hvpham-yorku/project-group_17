@@ -11,7 +11,7 @@ ENV NODE_ENV="development"
 
 # Install node modules
 COPY package-lock.json package.json ./
-RUN npm install --legacy-peer-deps
+RUN npm install
 
 # Copy application code
 COPY . .
