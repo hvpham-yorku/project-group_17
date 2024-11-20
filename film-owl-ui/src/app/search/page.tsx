@@ -38,7 +38,11 @@ const SearchPage: React.FC = () => {
 			<h1 className="text-4xl font-bold mb-8">Results for "{query}"</h1>
 			<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
 				{results.map((movie) => (
-					<div key={movie.id} className="mb-4">
+					<a
+						key={movie.id}
+						href={`/movie/${movie.id}`}
+						className="mb-4 block"
+					>
 						<img
 							src={
 								movie.image_url !== "N/A"
@@ -49,7 +53,7 @@ const SearchPage: React.FC = () => {
 							className="w-full h-447 object-cover mb-2 rounded"
 						/>
 						<h2 className="text-lg font-bold">{movie.title}</h2>
-					</div>
+					</a>
 				))}
 			</div>
 		</div>
