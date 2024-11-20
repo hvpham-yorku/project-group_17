@@ -30,8 +30,8 @@ const SearchInput: React.FC = () => {
 				value={query}
 				onChange={(e) => setQuery(e.target.value)}
 				onKeyDown={handleKeyPress}
-				className="ml-2 flex-grow bg-transparent outline-none dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-teal-500 dark:focus:ring-teal-300"
-				style={{ height: "100%" }}
+				className="w-full bg-transparent outline-none text-teal-600 font-bold dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-teal-500 dark:focus:ring-teal-300"
+				style={{ height: "2rem", paddingLeft: "1rem" }}
 			/>
 			<button
 				onClick={handleSearch}
