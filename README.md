@@ -1,6 +1,6 @@
-# FILM OWL
-
+# Film Owl
 ![Logo Image](logo.png)
+![Film Owl Giphy](doc/FilmOwl.gif)
 
 ## Motivation
 
