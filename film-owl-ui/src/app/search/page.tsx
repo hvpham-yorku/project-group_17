@@ -11,11 +11,14 @@ const SearchPage: React.FC = () => {
 	const query = searchParams.get("query") || "";
 	const [results, setResults] = useState<Movie[]>([]);
 	const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState('');
+
 
 	useEffect(() => {
 		if (!query) return;
 
 		setLoading(true);
+    setError('');
 
 		// Fetch data from the backend
 		fetch(`http://localhost:5002/search/${encodeURIComponent(query)}`)
@@ -25,9 +28,16 @@ const SearchPage: React.FC = () => {
 			})
 			.then((data) => {
 				if (!query) return;
-				setResults(data);
+        if (data.Error) {
+          setError(data.Error);
+        } else {
+         setResults(data);
+        }
 			})
-			.catch((error) => console.error("Error fetching movies:", error))
+			.catch((error) => {
+        console.error("Error fetching movies:", error)
+        setError('An error occurred while fetching movies.');
+  })
 			.finally(() => setLoading(false));
 	}, [query]);
 
@@ -35,8 +45,10 @@ const SearchPage: React.FC = () => {
 		<div className="container mx-auto px-4 py-8">
 			<h1 className="text-4xl font-bold mb-8">Results for "{query}"</h1>
 			{loading ? (
-				<div className="text-center">Loading...</div>
-			) : (
+				<div className="text-center text-teal-500">Loading...</div>
+			) : error ? (
+        <div className="text-center text-red-500">{error}</div>
+      ) : (
 				<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
 					{results.map((movie) => (
 						<Link
@@ -47,7 +59,7 @@ const SearchPage: React.FC = () => {
 							<Image
 								src={movie.image_url}
 								alt={movie.title}
-								className="rounded-lg shadow-lg mb-4 md:mb-0"
+								className="rounded-lg shadow-md mb-4 md:mb-0 hover:shadow-2xl transition-transform duration-300"
 								height={450}
 								width={300}
 							/>
