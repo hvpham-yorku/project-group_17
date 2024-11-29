@@ -20,8 +20,8 @@ services:
         build: ./film-owl-backend/service2
         ports:
             - "5001:8000"
-        volumes:
-            - ./film-owl-backend/service2:/app
+        # volumes:
+        #     - ./film-owl-backend/service2:/app
         environment:
             - FLASK_ENV=development
         develop:
