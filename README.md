@@ -10,7 +10,7 @@ FilmOwl was inspired by the desire to create a welcoming platform where movie en
 
 1. Clone the repository
 2. Install docker (ideally using [docker desktop](https://www.docker.com/products/docker-desktop/))
-3. run `docker compose up --watch` in the root (/project-group_17) directory of the repository
+3. run `docker compose up --build --watch` in the root (/project-group_17) directory of the repository
 4. run `docker compose down` to stop the containers
 
 ## Contribution
