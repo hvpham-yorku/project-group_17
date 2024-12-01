@@ -36,7 +36,17 @@ const LoginPage: React.FC = () => {
                 const data = await response.json();
 
                 if (response.ok) {
+
+                    const user = {
+                        username: data.username,
+                        email: trimmedEmail,
+                        token: data.token
+                    }
+
                     router.push("/");
+
+                    localStorage.setItem("user", JSON.stringify(user));
+                    window.location.reload();
                 } else {
                     setError(data.detail || "Invalid email or password");
                 }

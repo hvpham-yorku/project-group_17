@@ -1,16 +1,32 @@
 "use client";
 
+import { Button } from "@nextui-org/react";
 import Image from "next/image"; // For Next.js Image optimization
 import Link from "next/link";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 function NavBar() {
+
 	const [isOpen, setIsOpen] = useState(false);
+	let user = localStorage.getItem("user");
+	const router = useRouter();
+
+	let displayName = "";
+	if (user) {
+		displayName=JSON.parse(user).email;
+	}
 
 	const toggleMenu = () => {
 		setIsOpen(!isOpen);
 		console.log("Menu toggled:", isOpen);
 	};
+
+	const handleLogOut = () => {
+		localStorage.clear();
+		window.location.reload();
+		router.push("/");
+	}
 
 	return (
 		<nav className="sticky top-0 left-0 w-full z-50 bg-white dark:bg-gray-900 shadow-md">
@@ -62,18 +78,44 @@ function NavBar() {
 						>
 							Ratings
 						</Link>
-						<Link
-							href="/login"
-							className="block lg:inline-block text-teal-800 dark:text-teal-300 hover:text-teal-600 dark:hover:text-teal-400 hover:underline dark:hover:underline mx-4"
+						{
+							!user &&
+
+							<Link
+								href="/login"
+								className="block lg:inline-block text-teal-800 dark:text-teal-300 hover:text-teal-600 dark:hover:text-teal-400 hover:underline dark:hover:underline mx-4"
 						>
-							Login
-						</Link>
-						<Link
-							href="/signup"
-							className="block lg:inline-block text-teal-800 dark:text-teal-300 hover:text-teal-600 dark:hover:text-teal-400 hover:underline dark:hover:underline mx-4"
+								Login
+							</Link>
+						}
+						{
+							!user &&
+
+							<Link
+								href="/signup"
+								className="block lg:inline-block text-teal-800 dark:text-teal-300 hover:text-teal-600 dark:hover:text-teal-400 hover:underline dark:hover:underline mx-4"
 						>
-							SignUp
-						</Link>
+								SignUp
+							</Link>
+						}
+						{
+							user &&
+
+							<p className="block lg:inline-block text-teal-800 dark:text-teal-300  mx-4">
+
+								{displayName}
+							</p>
+						}
+						{
+							user &&
+
+							<Link 
+								href="/" 
+								className="block lg:inline-block text-teal-800 dark:text-teal-300 hover:text-teal-600 dark:hover:text-teal-400 hover:underline dark:hover:underline mx-4" onClick={handleLogOut}>
+								
+								Sign Out
+							</Link>
+						}
 					</div>
 				</div>
 			</div>
