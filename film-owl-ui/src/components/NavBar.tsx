@@ -62,6 +62,18 @@ function NavBar() {
 						>
 							Ratings
 						</Link>
+						<Link
+							href="/login"
+							className="block lg:inline-block text-teal-800 dark:text-teal-300 hover:text-teal-600 dark:hover:text-teal-400 hover:underline dark:hover:underline mx-4"
+						>
+							Login
+						</Link>
+						<Link
+							href="/signup"
+							className="block lg:inline-block text-teal-800 dark:text-teal-300 hover:text-teal-600 dark:hover:text-teal-400 hover:underline dark:hover:underline mx-4"
+						>
+							SignUp
+						</Link>
 					</div>
 				</div>
 			</div>

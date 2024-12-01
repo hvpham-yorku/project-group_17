@@ -1,8 +1,9 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from typing import Optional, List
 from sqlalchemy import Integer
 from sqlmodel import Field, Session, SQLModel, create_engine, select, ARRAY, Integer, String, Column
+from pydantic import BaseModel
 from datetime import datetime
 from sqlalchemy.dialects.postgresql import ARRAY
 
@@ -16,6 +17,9 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+class LoginRequest(BaseModel):
+    email: str
+    password: str
 
 class User(SQLModel, table=True):
     __tablename__ = "users"
@@ -77,6 +81,19 @@ def delete_user(user_id: int):
         session.delete(user)
         session.commit()
         return user
+
+@app.post("/login")
+def login(request: LoginRequest):
+    engine = create_engine("postgresql://postgres:postgres@db/film-owl")
+    with Session(engine) as session:
+        user = session.exec(select(User).where(User.email == request.email)).first()
+        if(not user):
+            raise HTTPException(status_code=400, detail="Invalid email or password")
+
+        if(request.password != user.password):
+            raise HTTPException(status_code=400, detail="Invalid email or password")
+        
+        return {"message": "Login successful", "user": user.id}
 
 if __name__ == "__main__":
     import uvicorn
