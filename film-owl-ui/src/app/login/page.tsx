@@ -6,14 +6,14 @@ import React, { useState } from "react";
 
 const LoginPage: React.FC = () => {
 
-    const [email, setEmail] = useState("");
+    const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
     const router = useRouter();
 
     const handleLogin = async () => {
 
-		const trimmedEmail = email.trim();
+		const trimmedEmail = username.trim();
         const trimmedPassword = password.trim();
 
         if (trimmedEmail && trimmedPassword) {
@@ -38,8 +38,7 @@ const LoginPage: React.FC = () => {
                 if (response.ok) {
 
                     const user = {
-                        username: data.username,
-                        email: trimmedEmail,
+                        username: trimmedEmail,
                         token: data.token
                     }
 
@@ -48,7 +47,7 @@ const LoginPage: React.FC = () => {
                     localStorage.setItem("user", JSON.stringify(user));
                     window.location.reload();
                 } else {
-                    setError(data.detail || "Invalid email or password");
+                    setError(data.detail || "Invalid username or password");
                 }
             } catch (error) {
                 setError("An error occurred while logging in");
@@ -74,10 +73,10 @@ const LoginPage: React.FC = () => {
 
             <div className="flex items-center border border-gray-300 rounded-md p-2 mb-4">
                 <Input
-				placeholder="Enter Email"
-				type="email"
-				value={email}
-				onChange={(e) => setEmail(e.target.value)}
+				placeholder="Enter Username"
+				type="text"
+				value={username}
+				onChange={(e) => setUsername(e.target.value)}
 				onKeyDown={handleKeyPress}
 				className="w-full bg-transparent outline-none text-teal-600 font-bold dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-teal-500 dark:focus:ring-teal-300"
 				style={{ height: "2rem", paddingLeft: "1rem" }}

@@ -14,7 +14,7 @@ function NavBar() {
 
 	let displayName = "";
 	if (user) {
-		displayName=JSON.parse(user).email;
+		displayName=JSON.parse(user).username;
 	}
 
 	const toggleMenu = () => {

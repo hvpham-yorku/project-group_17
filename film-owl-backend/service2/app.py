@@ -86,7 +86,7 @@ def delete_user(user_id: int):
 def login(request: LoginRequest):
     engine = create_engine("postgresql://postgres:postgres@db/film-owl")
     with Session(engine) as session:
-        user = session.exec(select(User).where(User.email == request.email)).first()
+        user = session.exec(select(User).where(User.username == request.email)).first()
         if(not user):
             raise HTTPException(status_code=400, detail="Invalid email or password")
 
