@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from "@nextui-org/react";
-import Image from "next/image"; // For Next.js Image optimization
+import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
@@ -66,18 +66,25 @@ function NavBar() {
 						>
 							Home
 						</Link>
-						<Link
-							href="/favourites"
-							className="block lg:inline-block text-teal-800 dark:text-teal-300 hover:text-teal-600 dark:hover:text-teal-400 hover:underline dark:hover:underlinemx-4"
-						>
-							Favourites
-						</Link>
-						<Link
+						
+						{
+							user &&
+
+							<Link
+								href="/favourites"
+								className="block lg:inline-block text-teal-800 dark:text-teal-300 hover:text-teal-600 dark:hover:text-teal-400 hover:underline dark:hover:underlinemx-4"
+							>
+								Favourites
+							</Link>
+						}
+
+
+						{/* <Link
 							href="/ratings"
 							className="block lg:inline-block text-teal-800 dark:text-teal-300 hover:text-teal-600 dark:hover:text-teal-400 hover:underline dark:hover:underline mx-4"
 						>
 							Ratings
-						</Link>
+						</Link> */}
 						{
 							!user &&
 

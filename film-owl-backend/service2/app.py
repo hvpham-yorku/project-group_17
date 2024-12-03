@@ -17,6 +17,18 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+class Movie(SQLModel, table=True):
+    __tablename__ = "movies"
+    id: Optional[int] = Field(default=None, primary_key=True)
+    title: str
+    release_date: datetime
+    plot: str
+    genre: str
+    imdb_id: str
+    duration_minutes: Optional[str] = None
+    image_url: Optional[str] = None
+    created_at: Optional[str] = None
+
 class LoginRequest(BaseModel):
     email: str
     password: str
@@ -94,6 +106,65 @@ def login(request: LoginRequest):
             raise HTTPException(status_code=400, detail="Invalid email or password")
         
         return {"message": "Login successful", "user": user.id}
+    
+# @app.put("/users/{username}/favourites")
+# def add_to_favorites(username: str, movie_id: int):
+#     engine = create_engine("postgresql://postgres:postgres@db/film-owl")
+#     with Session(engine) as session:
+#         user_db = session.exec(select(User).where(User.username == username)).first()
+        
+#         if user_db is None:
+#             raise HTTPException(status_code=404, detail="User not found")
+        
+#         if user_db.favorites is None:
+#             user_db.favorites = []
+        
+#         if movie_id not in user_db.favorites:
+#             user_db.favorites.append(movie_id)
+        
+#         session.add(user_db)
+#         session.commit()
+#         session.refresh(user_db)
+
+#         return {"message": "Movie added to favorites", "favorites": user_db.favorites}
+
+@app.get("/users/{username}/favourites")
+def get_user_favourite_movies(username: str):
+    engine = create_engine("postgresql://postgres:postgres@db/film-owl")
+    with Session(engine) as session:
+        user = session.exec(select(User).where(User.username == username)).first()
+        if not user:
+            raise HTTPException(status_code=404, detail="User not found")
+        
+        favorite_movie_ids = user.favorites or []
+        if not favorite_movie_ids:
+            return []
+        
+        statement = select(Movie).where(Movie.id.in_(favorite_movie_ids))
+        favorite_movies = session.exec(statement).all()
+
+        return favorite_movies
+
+@app.put("/users/{username}/favourites")
+def update_user_favourites(username: str, movie_data: dict):
+    engine = create_engine("postgresql://postgres:postgres@db/film-owl")
+    with Session(engine) as session:
+        user_db = session.exec(select(User).where(User.username == username)).first()
+
+        if not user_db:
+            raise HTTPException(status_code=404, detail="User not found")
+
+        current_favorites = user_db.favorites or []
+
+        movie_id = movie_data.get('favorites', [])[0] 
+        if movie_id not in current_favorites:
+            current_favorites.append(movie_id)
+
+        user_db.favorites = current_favorites
+        session.add(user_db)
+        session.commit()
+
+        return {"message": "Favorites updated", "favorites": current_favorites}
 
 if __name__ == "__main__":
     import uvicorn
