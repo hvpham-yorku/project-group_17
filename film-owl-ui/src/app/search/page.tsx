@@ -36,7 +36,7 @@ const SearchPage: React.FC = () => {
 			})
 			.catch((error) => {
         console.error("Error fetching movies:", error)
-        setError('An error occurred while fetching movies.');
+        setError("An error occurred while fetching movies");
   })
 			.finally(() => setLoading(false));
 	}, [query]);
