@@ -15,9 +15,9 @@ const MoviePage: React.FC = () => {
 
   let user = localStorage.getItem("user");
   let displayName = "";
-	if (user) {
-		displayName=JSON.parse(user).email;
-	}
+  if (user) {
+    displayName = JSON.parse(user).email;
+  }
 
   useEffect(() => {
     if (!id) return;
@@ -74,39 +74,60 @@ const MoviePage: React.FC = () => {
     );
   }
 
+  // const handleFavourite = async () => {
+  //   try {
+  //     const userResponse = await fetch(`http://localhost:5001/users/${displayName}/favourites`);
+  //     if (!userResponse.ok) {
+  //       throw new Error("Failed to fetch user favorites");
+  //     }
+
+  //     const userFavorites = await userResponse.json();
+
+  //     const updatedFavorites = [...userFavorites, movie.id];
+
+  //     const response = await fetch(`http://localhost:5001/users/${displayName}/favourites?movie_id=${movie.id}`, {
+  //       method: 'PUT',
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //       },
+  //       body: JSON.stringify({
+  //       favorites: updatedFavorites,
+  //       }),
+  //     });
+
+  //     if (!response.ok) {
+  //       throw new Error("Failed to add movie to favorites");
+  //     }
+
+  //     alert("Movie added to favorites!");
+
+  //   } catch (err) {
+  //     console.error("Error adding movie to favorites:", err);
+  //     alert("Failed to add movie to favorites.");
+  //   }
+  // };
+
   const handleFavourite = async () => {
     try {
-      const userResponse = await fetch(`http://localhost:5001/users/${displayName}/favourites`);
-      if (!userResponse.ok) {
-        throw new Error("Failed to fetch user favorites");
-      }
-  
-      const userFavorites = await userResponse.json();
-  
-      const updatedFavorites = [...userFavorites, movie.id];
-  
       const response = await fetch(`http://localhost:5001/users/${displayName}/favourites?movie_id=${movie.id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          favorites: updatedFavorites,
-        }),
+        body: JSON.stringify({ movie_id: movie.id })
+        
       });
-  
+
       if (!response.ok) {
         throw new Error("Failed to add movie to favorites");
       }
-  
+      
       alert("Movie added to favorites!");
-  
     } catch (err) {
       console.error("Error adding movie to favorites:", err);
       alert("Failed to add movie to favorites.");
     }
   };
-  
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -129,12 +150,12 @@ const MoviePage: React.FC = () => {
               <strong>Genre:</strong> {movie.genre}
             </p>
             {
-            user &&
+              user &&
 
-            <button type="button" className="px-4 py-2 bg-teal-600 text-white rounded-md hover:bg-teal-700" onClick={handleFavourite}>
+              <button type="button" className="px-4 py-2 bg-teal-600 text-white rounded-md hover:bg-teal-700" onClick={handleFavourite}>
                 Favourite
-            </button>
-          }
+              </button>
+            }
           </div>
           <div className="md:ml-8 mt-8">
             <h2 className="text-2xl font-bold mb-1">Reviews and Comments</h2>

@@ -6,6 +6,9 @@ from sqlmodel import Field, Session, SQLModel, create_engine, select, ARRAY, Int
 from pydantic import BaseModel
 from datetime import datetime
 from sqlalchemy.dialects.postgresql import ARRAY
+import logging
+
+logging.basicConfig(level=logging.DEBUG)
 
 app = FastAPI()
 
@@ -137,16 +140,21 @@ def get_user_favourite_movies(username: str):
             raise HTTPException(status_code=404, detail="User not found")
         
         favorite_movie_ids = user.favorites or []
+
+        logging.debug(f"User {username} has favorite movie IDs: {favorite_movie_ids}")
+        
         if not favorite_movie_ids:
             return []
         
         statement = select(Movie).where(Movie.id.in_(favorite_movie_ids))
         favorite_movies = session.exec(statement).all()
-
+        
+        logging.debug(f"User {username} has favorite movie IDs: {favorite_movie_ids}")
+        
         return favorite_movies
 
 @app.put("/users/{username}/favourites")
-def update_user_favourites(username: str, movie_data: dict):
+def update_user_favourites(username: str, movie_id: int):
     engine = create_engine("postgresql://postgres:postgres@db/film-owl")
     with Session(engine) as session:
         user_db = session.exec(select(User).where(User.username == username)).first()
@@ -156,13 +164,16 @@ def update_user_favourites(username: str, movie_data: dict):
 
         current_favorites = user_db.favorites or []
 
-        movie_id = movie_data.get('favorites', [])[0] 
         if movie_id not in current_favorites:
-            current_favorites.append(movie_id)
+          current_favorites.append(movie_id)
 
         user_db.favorites = current_favorites
         session.add(user_db)
         session.commit()
+        
+        logging.debug(f"After commit, favorites for user {username}: {user_db.favorites}")
+
+        logging.debug(f"Updated favorites for user {username}: {current_favorites}")
 
         return {"message": "Favorites updated", "favorites": current_favorites}
 
