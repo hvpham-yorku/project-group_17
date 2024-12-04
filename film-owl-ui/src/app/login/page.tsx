@@ -49,8 +49,8 @@ const LoginPage: React.FC = () => {
 
 				if (response.ok) {
 					localStorage.setItem("user", JSON.stringify(userdata));
-					// router.push("/");
-					// window.location.reload();
+					router.push("/favourites");
+					window.location.reload();
 					console.log("Login successful");
 				} else {
 					setError(data.detail || "Invalid email or password");
