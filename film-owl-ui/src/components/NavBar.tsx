@@ -5,7 +5,8 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 function NavBar() {
-	let user = localStorage.getItem("user");
+	let user =
+		typeof window !== "undefined" ? localStorage.getItem("user") : null;
 	const router = useRouter();
 
 	let displayName = "";
