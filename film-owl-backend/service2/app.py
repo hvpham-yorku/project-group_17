@@ -2,10 +2,23 @@ from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from typing import Optional, List
 from sqlalchemy import Integer
-from sqlmodel import Field, Session, SQLModel, create_engine, select, ARRAY, Integer, String, Column
+from sqlmodel import (
+    Field,
+    Session,
+    SQLModel,
+    create_engine,
+    select,
+    ARRAY,
+    Integer,
+    String,
+    Column,
+)
 from pydantic import BaseModel
 from datetime import datetime
 from sqlalchemy.dialects.postgresql import ARRAY
+import logging
+
+logging.basicConfig(level=logging.DEBUG)
 
 app = FastAPI()
 
@@ -17,9 +30,24 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-class LoginRequest(BaseModel):
-    email: str
-    password: str
+# Database connection
+DATABASE_URL = "postgresql://postgres:postgres@db/film-owl"
+engine = create_engine(DATABASE_URL, echo=True)  # Enable query logging
+
+
+# SQLModel Definitions
+class Movie(SQLModel, table=True):
+    __tablename__ = "movies"
+    id: Optional[int] = Field(default=None, primary_key=True)
+    title: str
+    release_date: datetime
+    plot: str
+    genre: str
+    imdb_id: str
+    duration_minutes: Optional[str] = None
+    image_url: Optional[str] = None
+    created_at: Optional[str] = None
+
 
 class User(SQLModel, table=True):
     __tablename__ = "users"
@@ -27,75 +55,110 @@ class User(SQLModel, table=True):
     username: str
     email: str
     password: str
-    created_at: Optional[datetime] = Field(default=datetime.now())
-    favorites: Optional[List[int]] = Field(default=None, sa_column=Column(ARRAY(Integer())))
+    created_at: Optional[datetime] = Field(default_factory=datetime.now)
+    favourites: Optional[List[int]] = Field(
+        default_factory=list, sa_column=Column(ARRAY(Integer()))
+    )
 
+
+# Pydantic Request/Response Models
+class LoginRequest(BaseModel):
+    email: str
+    password: str
+
+
+class UpdateFavouritesRequest(BaseModel):
+    id: int
+
+
+# Routes
 @app.get("/users")
 def get_all_users():
-    engine = create_engine("postgresql://postgres:postgres@db/film-owl")
     with Session(engine) as session:
-        statement = select(User)
-        users = session.exec(statement).all()
+        users = session.exec(select(User)).all()
         return users
+
 
 @app.post("/users")
 def create_user(user: User):
-    engine = create_engine("postgresql://postgres:postgres@db/film-owl")
     with Session(engine) as session:
         session.add(user)
         session.commit()
         session.refresh(user)
         return user
 
+
 @app.get("/users/{user_id}")
 def get_user_by_id(user_id: int):
-    engine = create_engine("postgresql://postgres:postgres@db/film-owl")
     with Session(engine) as session:
-        statement = select(User).where(User.id == user_id)
-        user = session.exec(statement).first()
+        user = session.exec(select(User).where(User.id == user_id)).first()
+        if not user:
+            raise HTTPException(status_code=404, detail="User not found")
         return user
+
+
+@app.get("/users/{user_id}/favourites")
+def get_user_favourites(user_id: int):
+    with Session(engine) as session:
+        user = session.exec(select(User).where(User.id == user_id)).first()
+        if not user:
+            raise HTTPException(status_code=404, detail="User not found")
+        return user.favourites
+
 
 @app.put("/users/{user_id}")
 def update_user(user_id: int, user: User):
-    engine = create_engine("postgresql://postgres:postgres@db/film-owl")
     with Session(engine) as session:
-        statement = select(User).where(User.id == user_id)
-        user_db = session.exec(statement).first()
-        if user_db is None:
-            return None
+        user_db = session.exec(select(User).where(User.id == user_id)).first()
+        if not user_db:
+            raise HTTPException(status_code=404, detail="User not found")
+
+        # Update fields
         user_db.username = user.username
         user_db.email = user.email
         user_db.password = user.password
-        user_db.favorites = user.favorites
+        user_db.favourites = user.favourites or user_db.favourites
+
         session.add(user_db)
         session.commit()
         session.refresh(user_db)
         return user_db
 
+
 @app.delete("/users/{user_id}")
 def delete_user(user_id: int):
-    engine = create_engine("postgresql://postgres:postgres@db/film-owl")
     with Session(engine) as session:
-        statement = select(User).where(User.id == user_id)
-        user = session.exec(statement).first()
+        user = session.exec(select(User).where(User.id == user_id)).first()
+        if not user:
+            raise HTTPException(status_code=404, detail="User not found")
+
         session.delete(user)
         session.commit()
         return user
 
+
 @app.post("/login")
 def login(request: LoginRequest):
-    engine = create_engine("postgresql://postgres:postgres@db/film-owl")
     with Session(engine) as session:
         user = session.exec(select(User).where(User.email == request.email)).first()
-        if(not user):
+        if not user or request.password != user.password:
             raise HTTPException(status_code=400, detail="Invalid email or password")
 
-        if(request.password != user.password):
-            raise HTTPException(status_code=400, detail="Invalid email or password")
-        
-        return {"message": "Login successful", "user": user.id}
+        return {"message": "Login successful", "user_id": user.id}
 
-if __name__ == "__main__":
-    import uvicorn
 
-    uvicorn.run(app, host="0.0.0.0", port=8000, log_level="info")
+@app.get("/users/{user_id}/favourites/movies")
+def get_user_favourite_movies(user_id: int):
+    with Session(engine) as session:
+        user = session.exec(select(User).where(User.id == user_id)).first()
+        if not user:
+            raise HTTPException(status_code=404, detail="User not found")
+
+        favorite_movie_ids = user.favourites
+        if not favorite_movie_ids:
+            return []
+
+        movies = session.exec(
+            select(Movie).where(Movie.id.in_(favorite_movie_ids))
+        ).all()
+        return movies
