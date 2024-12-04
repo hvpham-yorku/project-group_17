@@ -30,12 +30,11 @@ const LoginPage: React.FC = () => {
 				});
 
 				const data = await response.json();
-
 				// data.id will be the user id
 				// get the user by hitting the endpoint /users/:id
 
 				const userresponse = await fetch(
-					`http://localhost:5001/users/${data.user}`,
+					`http://localhost:5001/users/${data.user_id}`,
 					{
 						method: "GET",
 						headers: {
@@ -50,8 +49,8 @@ const LoginPage: React.FC = () => {
 
 				if (response.ok) {
 					localStorage.setItem("user", JSON.stringify(userdata));
-					router.push("/");
-					window.location.reload();
+					// router.push("/");
+					// window.location.reload();
 					console.log("Login successful");
 				} else {
 					setError(data.detail || "Invalid email or password");

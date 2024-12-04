@@ -3,12 +3,7 @@ import Image from "next/image";
 import { useParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { Movie } from "../../models/movie";
-
-interface User {
-	id: string;
-	email: string;
-	favourites: number[];
-}
+import { User } from "../../models/user";
 
 const MoviePage: React.FC = () => {
 	const { id } = useParams();
@@ -18,7 +13,7 @@ const MoviePage: React.FC = () => {
 	const [user, setUser] = useState<User | null>(null);
 
 	useEffect(() => {
-		// Ensure this runs only on the client-side
+		// Fetch user data from local storage
 		const userData = localStorage.getItem("user");
 		if (userData) {
 			setUser(JSON.parse(userData));
@@ -48,23 +43,23 @@ const MoviePage: React.FC = () => {
 				setLoading(false);
 			}
 		};
+
 		fetchMovie();
 	}, [id]);
 
 	const handleFavourite = async () => {
 		if (!user || !movie) {
-			alert("User not found. Please log in.");
+			alert("User not found or movie is unavailable. Please log in.");
 			return;
 		}
+		// Update user data in local storage
+		const updatedUser = {
+			...user,
+			favourites: [...(user.favourites || []), movie.id],
+		};
 		try {
-			// Add movie to user's favorites
-			const updatedUser = {
-				...user,
-				favourites: [...(user.favourites || []), Number(movie.id)],
-			};
-
 			const response = await fetch(
-				`http://localhost:5001/users/${user.id}/`,
+				`http://localhost:5001/users/${user.id}`,
 				{
 					method: "PUT",
 					headers: {
@@ -75,17 +70,16 @@ const MoviePage: React.FC = () => {
 			);
 
 			if (!response.ok) {
-				throw new Error("Failed to add movie to favorites");
+				throw new Error("Failed to add movie to favourites");
 			}
 
-			// Update local storage and state
 			localStorage.setItem("user", JSON.stringify(updatedUser));
 			setUser(updatedUser);
 
-			alert("Movie added to favorites!");
+			alert("Movie added to favourites!");
 		} catch (err) {
-			console.error("Error adding movie to favorites:", err);
-			alert("Failed to add movie to favorites.");
+			console.error("Error adding movie to favourites:", err);
+			alert("Failed to add movie to favourites.");
 		}
 	};
 
@@ -143,7 +137,7 @@ const MoviePage: React.FC = () => {
 								className="px-4 py-2 bg-teal-600 text-white rounded-md hover:bg-teal-700"
 								onClick={handleFavourite}
 							>
-								Favourite
+								Add to favourites
 							</button>
 						)}
 					</div>

@@ -2,21 +2,22 @@
 
 import React, { useEffect, useState } from "react";
 import { Movie } from "../models/movie";
+import { User } from "../models/user";
 
 const FavouritesPage: React.FC = () => {
-	let user = localStorage.getItem("user");
+	let user: User = localStorage.getItem("user")
+		? JSON.parse(localStorage.getItem("user") || "null")
+		: { username: "Guest", favourites: [] };
 	const [results, setResults] = useState<Movie[]>([]);
 	const [error, setError] = useState("");
 	const [loading, setLoading] = useState<boolean>(false);
+	const displayName = user.username;
 
-	let displayName = user ? JSON.parse(user).email : "";
 	useEffect(() => {
-		const fetchFavorites = async () => {
+		const fetchfavourites = async () => {
 			try {
-				const user = localStorage.getItem("user");
 				if (user) {
-					const userData = JSON.parse(user);
-					const favoriteIds = userData.favourites || [];
+					const favoriteIds = user.favourites || [];
 					const favoriteMovies: Movie[] = [];
 
 					for (const id of favoriteIds) {
@@ -31,7 +32,7 @@ const FavouritesPage: React.FC = () => {
 				}
 			} catch (error) {
 				console.error(
-					"Error fetching favorites from localStorage:",
+					"Error fetching favourites from localStorage:",
 					error
 				);
 				setError("Failed to fetch favorite movies.");
@@ -41,7 +42,7 @@ const FavouritesPage: React.FC = () => {
 		};
 
 		setLoading(true);
-		fetchFavorites();
+		fetchfavourites();
 	}, [displayName]);
 
 	if (loading) {

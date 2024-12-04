@@ -3,16 +3,14 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { User } from "../app/models/user";
 
 function NavBar() {
-	let user =
-		typeof window !== "undefined" ? localStorage.getItem("user") : null;
+	let user: User =
+		typeof window !== "undefined"
+			? JSON.parse(localStorage.getItem("user") || "null")
+			: null;
 	const router = useRouter();
-
-	let displayName = "";
-	if (user) {
-		displayName = JSON.parse(user).username;
-	}
 
 	const handleLogOut = () => {
 		localStorage.clear();
@@ -50,7 +48,7 @@ function NavBar() {
 					<div className="text-xl lg:flex-grow">
 						{user && (
 							<p className="block lg:inline-block text-teal-800 dark:text-teal-300  mx-4">
-								Welcome, {displayName}
+								Welcome, {user.username}
 							</p>
 						)}
 						<Link
@@ -69,12 +67,6 @@ function NavBar() {
 							</Link>
 						)}
 
-						{/* <Link
-							href="/ratings"
-							className="block lg:inline-block text-teal-800 dark:text-teal-300 hover:text-teal-600 dark:hover:text-teal-400 hover:underline dark:hover:underline mx-4"
-						>
-							Ratings
-						</Link> */}
 						{!user && (
 							<Link
 								href="/login"
